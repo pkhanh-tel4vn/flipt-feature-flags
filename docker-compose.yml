@@ -8,8 +8,11 @@ services:
     working_dir: /server
     ports:
       - "8080:8080"
+      - "9000:9000"
     volumes:
       - .:/server
+      - ./config/config.yml:/etc/flipt/config.yml
+      - ./opt/flipt:/var/opt/flipt
     command: ["mage", "go:run"]
 
   ui:
@@ -22,6 +25,10 @@ services:
     volumes:
       - ./ui:/ui
       - exclude:/ui/node_modules
+    environment:
+      # Backend API address - use service name for Docker network communication
+      - FLIPT_ADDRESS=http://server:8080
+      - VITE_API_URL=http://localhost:8080
     command: ["npm", "run", "dev"]
 
 volumes:

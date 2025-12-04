@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=./flipt.schema.json
+
+# version: "1.0"
+log:
+  level: DEBUG
+  grpc_level: DEBUG
+
+# server:
+#   protocol: http
+#   host: 0.0.0.0
+#   https_port: 443
+#   http_port: 8080
+#   grpc_port: 9000
+cors:
+  enabled: true
+  allowed_origins:
+    - "*"
+  allowed_headers:
+    - "*"
+
+authentication:
+  required: true
+  methods:
+    jwt:
+      enabled: true
+      claims_mapping:
+        email: /email
+        name: /name
+        sub: /sub
+        picture: /picture
+        role: /role
+      validate_claims:
+        issuer: https://auth0.com/
+        subject: user@domain.com
+        audiences:
+          - http://localhost:8080
+
+storage:
+  default:
+    backend:
+      type: local
+      path: /server/opt/flipt

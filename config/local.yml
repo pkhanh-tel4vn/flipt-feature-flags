@@ -1,8 +1,9 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/flipt-io/flipt/main/config/flipt.schema.json
+# yaml-language-server: $schema=./flipt.schema.json
 
 # version: "1.0"
 log:
   level: DEBUG
+  grpc_level: DEBUG
 
 # server:
 #   protocol: http
@@ -10,3 +11,70 @@ log:
 #   https_port: 443
 #   http_port: 8080
 #   grpc_port: 9000
+cors:
+  enabled: true
+  allowed_origins:
+    - "*"
+  allowed_headers:
+    - "*"
+
+environments:
+  dev: # id
+    name: "Development"
+    storage: "dev"
+    default: true
+  staging: # id
+    name: "User Acceptance Testing"
+    storage: "staging"
+  prod: # id
+    name: "Production"
+    storage: "prod"
+
+authentication:
+  required: true
+  session:
+    domain: localhost
+    secure: false
+  methods:
+    github:
+      enabled: true
+      client_id: Ov23liew5wEpmXMsmCK4
+      client_secret: d294c8a39f845856a14c8a83d704288894cf6897
+      redirect_address: http://localhost:8080
+      scopes:
+        - user:email
+    token:
+      enabled: true
+      storage:
+        type: static
+        tokens:
+          bootstrap:
+            credential: "s3cr3t!"
+            metadata:
+              role: admin
+              organization: my-org
+              team: my-team
+          user:
+            credential: "s3cr3t!"
+            metadata:
+              role: user
+              organization: my-org
+              team: my-team
+
+storage:
+  default:
+    backend:
+      type: local
+      path: /server/opt/flipt/default
+  dev:
+    backend:
+      type: local
+      path: /server/opt/flipt/dev
+  staging:
+    backend:
+      type: local
+      path: /server/opt/flipt/staging
+  prod:
+    backend:
+      type: local
+      path: /server/opt/flipt/prod
